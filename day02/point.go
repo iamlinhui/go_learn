@@ -4,11 +4,23 @@ import "fmt"
 
 func main() {
 
-	var i int = 10
+	i := 100
+
+	//0xc00001a0b8
+	fmt.Println(&i)
+
+	point := &i
+
+	//*int
+	fmt.Printf("%T\n", &i)
+
+	// 100 指针指向的值
+	fmt.Printf("%v\n", *point)
+	var j int = 10
 
 	var name = 9899
 
-	var ptr *int = &i
+	var ptr *int = &j
 
 	fmt.Println(*ptr)
 	fmt.Println(ptr)
@@ -17,7 +29,7 @@ func main() {
 
 	ptr = &name
 
-	fmt.Println(i)
+	fmt.Println(j)
 
 	fmt.Println(*ptr)
 	fmt.Println(ptr)
