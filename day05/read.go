@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"sync"
 )
 
@@ -51,6 +52,9 @@ func main() {
 		concurrency++
 		chunkSizes = append(chunkSizes, c)
 	}
+
+	// go1.8后 程序默认运行在多个核上面
+	runtime.GOMAXPROCS(runtime.NumCPU() - 1)
 
 	var wg sync.WaitGroup
 	wg.Add(concurrency)
