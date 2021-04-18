@@ -8,8 +8,10 @@ import (
 
 func main() {
 
-	// 指定大小的话 是声明缓冲区  如果不指定管道大小 默认为1个 则需要先监听消费 并且是个注册串行的过程  只有消耗了 才能再放进去一个
+	// 指定大小的话 是声明缓冲区  如果不指定管道大小 则需要先监听消费 并且是个注册串行的过程  只有消耗了 才能再放进去一个
 	channel := make(chan int)
+
+	fmt.Printf("%v,%v\n", len(channel), cap(channel))
 
 	defer close(channel)
 
