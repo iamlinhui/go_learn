@@ -9,10 +9,13 @@ type Action interface {
 }
 
 type Person struct {
+	Text string
+
+	Name string
 }
 
 func (person *Person) Eat() {
-	fmt.Println("人吃饭")
+	fmt.Printf("%v学人吃饭\n", person.Name)
 }
 
 func (person *Person) Walk() {
@@ -21,10 +24,11 @@ func (person *Person) Walk() {
 
 type Student struct {
 	Person
+	Name string
 }
 
 func (student *Student) Eat() {
-	fmt.Println("学生吃饭")
+	fmt.Printf("%v学生吃饭\n", student.Name)
 }
 
 func (student *Student) Walk() {
@@ -35,13 +39,17 @@ func (student *Student) Walk() {
 func main() {
 
 	var a Action
-	a = &Student{}
+	a = &Student{Name: "AA"}
 
 	a.Eat()
 	a.Walk()
 
-	a = &Person{}
+	a = &Person{Name: "BB"}
 	a.Eat()
 	a.Walk()
+
+	c := &Student{Name: "CC"}
+	fmt.Println(c.Person.Name)
+	fmt.Println(c.Name)
 
 }
