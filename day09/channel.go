@@ -9,15 +9,15 @@ import (
 func main() {
 
 	intChan := make(chan int, 100)
-	resultChan := make(chan int, 100)
+	resultChan := make(chan int, 100000)
 
 	var wg sync.WaitGroup
 	wg.Add(100)
 
-	go putNum(intChan, 100000)
+	go putNumber(intChan, 100000)
 
 	for i := 0; i < 100; i++ {
-		go calc(intChan, resultChan, &wg)
+		go calc(intChan, resultChan, &wg, i)
 	}
 
 	wg.Wait()
@@ -30,16 +30,21 @@ func main() {
 
 }
 
-func calc(intChan chan int, resultChan chan int, wg *sync.WaitGroup) {
+func calc(intChan chan int, resultChan chan int, wg *sync.WaitGroup, i int) {
 	defer wg.Done()
 	for {
 		if num, ok := <-intChan; ok {
-			fmt.Printf("num : %v,ok: %v\n", num, ok)
-			flag := int(math.Sqrt(float64(num)))
-			for i := 2; i <= flag; i++ {
+			fmt.Printf("管道编号:%v | num : %v,ok: %v\n", i, num, ok)
+			temp := int(math.Sqrt(float64(num)))
+			flag := true
+			for i := 2; i <= temp; i++ {
 				if num%i == 0 {
-					resultChan <- num
+					flag = false
+					break
 				}
+			}
+			if flag {
+				resultChan <- num
 			}
 		} else {
 			break
@@ -47,7 +52,7 @@ func calc(intChan chan int, resultChan chan int, wg *sync.WaitGroup) {
 	}
 }
 
-func putNum(intChan chan int, limit int) {
+func putNumber(intChan chan int, limit int) {
 	defer close(intChan)
 	for i := 1; i <= limit; i++ {
 		intChan <- i
