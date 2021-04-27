@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
 //向 intChan 放入 1-8000 个数
@@ -18,16 +17,16 @@ func putNum(intChan chan int) {
 
 // 从 intChan 取出数据，并判断是否为素数,如果是，就
 //	//放入到 primeChan
-func primeNum(intChan chan int, primeChan chan int, exitChan chan bool) {
+func primeNum(intChan chan int, primeChan chan int, exitChan chan bool, i int) {
 
 	//使用 for 循环
 	// var num int var flag bool //
 
 	for {
-		time.Sleep(time.Millisecond * 10)
 		num, ok := <-intChan
 
-		if !ok { //intChan 取不到.. break
+		if !ok { //intChan 取不到..
+			break
 		}
 		flag := true //假设是素数
 		//判断 num 是不是素数
@@ -39,11 +38,12 @@ func primeNum(intChan chan int, primeChan chan int, exitChan chan bool) {
 		}
 
 		if flag {
-			//将这个数就放入到 primeChan primeChan<- num
+			//将这个数就放入到 primeChan
+			primeChan <- num
 		}
 	}
 
-	fmt.Println("有一个 primeNum  协程因为取不到数据，退出")
+	fmt.Printf("编号%v 有一个 primeNum  协程因为取不到数据，退出\n", i)
 	//这里我们还不能关闭 primeChan
 	//向 exitChan  写入 true
 	exitChan <- true
@@ -62,8 +62,7 @@ func main() {
 	//开启 4 个协程，从 intChan 取出数据，并判断是否为素数,如果是，就
 	//放入到 primeChan
 	for i := 0; i < 4; i++ {
-		go primeNum(intChan, primeChan, exitChan)
-
+		go primeNum(intChan, primeChan, exitChan, i)
 	}
 
 	//这里我们主线程，进行处理
@@ -71,9 +70,8 @@ func main() {
 	go func() {
 		for i := 0; i < 4; i++ {
 			<-exitChan
-
 		}
-		//当我们从 exitChan 取出了 4 个结果，就可以放心的关闭 prprimeChan
+		//当我们从 exitChan 取出了 4 个结果，就可以放心的关闭 primeChan
 		close(primeChan)
 	}()
 
