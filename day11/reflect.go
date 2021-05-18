@@ -5,6 +5,13 @@ import (
 	"reflect"
 )
 
+/**
+变量 --传参--> Interface
+变量 <--类型断言-- Interface
+
+Interface --reflect.Value()函数--> reflect.Value
+Interface <--stuValue.Interface()函数-- reflect.Value
+*/
 func main() {
 
 	stu := student{
