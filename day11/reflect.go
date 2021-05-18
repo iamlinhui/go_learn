@@ -16,8 +16,17 @@ func main() {
 
 	fmt.Println(stuType)
 
+	// struct --> reflect.Value
 	stuValue := reflect.ValueOf(stu)
 	fmt.Println(stuValue)
+
+	// reflect.Value -->  Interface
+	iVal := stuValue.Interface()
+	fmt.Println(iVal)
+
+	// Interface --> struct
+	v := iVal.(student)
+	fmt.Println(v)
 
 	for i := 0; i < stuType.NumField(); i++ {
 		field := stuType.Field(i)
