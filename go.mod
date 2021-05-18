@@ -1,4 +1,4 @@
-module go-gui
+module go-learn
 
 go 1.12
 
